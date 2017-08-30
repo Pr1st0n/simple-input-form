@@ -1,0 +1,45 @@
+body {
+    font-family: sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+#myForm {
+    padding: 12px;
+    margin: 20px 30%;
+    border: 1px solid #C2C2C2;
+}
+
+#myForm .form-input, .form-submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#myForm .form-input {
+    padding-bottom: 10px;
+}
+
+#myForm .form-input label {
+    flex: 1 0 120px;
+    max-width: 140px;
+}
+
+#myForm .form-input label + * {
+    flex: 1 0 220px;
+}
+
+#myForm #submitButton {
+    margin-left: auto;
+    padding: 8px 16px;
+    border: none;
+    background: #333;
+    color: #C2C2C2;
+    letter-spacing: .1em;
+}
+
+.error {
+    border: 1px solid red;
+}

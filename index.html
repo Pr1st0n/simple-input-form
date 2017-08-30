@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Input Form</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<h1>Node.JS school test task</h1>
+
+<form id="myForm" action="responses/success.json">
+  <div class="form-input">
+    <label>FULL NAME:</label>
+    <input name="fio"/>
+  </div>
+  <div class="form-input">
+    <label>EMAIL:</label>
+    <input name="email"/>
+  </div>
+  <div class="form-input">
+    <label>PHONE:</label>
+    <input name="phone"/>
+  </div>
+  <div class="form-submit">
+    <button id="submitButton">SUBMIT</button>
+  </div>
+
+  <div id="resultContainer"></div>
+</form>
+<script type="text/javascript" charset="utf-8" src="index.js"></script>
+</body>
+</html>
