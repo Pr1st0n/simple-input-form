@@ -3,10 +3,10 @@
  */
 class InputForm {
   constructor() {
-    this.form = document.getElementById('myForm');
-    this.inputs = Array.from(this.form.querySelectorAll('.form-input input'));
+    this._form = document.getElementById('myForm');
+    this._inputs = Array.from(this._form.querySelectorAll('.form-input input'));
 
-    this.form.addEventListener('submit', this.submit.bind(this));
+    this._form.addEventListener('submit', this.submit.bind(this));
   }
 
   /**
@@ -34,7 +34,7 @@ class InputForm {
       }
     }
 
-    this.inputs.forEach(input => {
+    this._inputs.forEach(input => {
       const name = input.name;
       const value = input.value;
       const isValid = validate0(name, value);
@@ -54,7 +54,7 @@ class InputForm {
    * @returns {Object} Data object.
    */
   getData() {
-    return this.inputs.reduce((memo, input) => {
+    return this._inputs.reduce((memo, input) => {
       memo[input.name] = input.value;
 
       return memo;
@@ -72,13 +72,13 @@ class InputForm {
    * not exceeding 30.
    */
   setData(data) {
-    const inputNames = this.inputs.map(input => input.name);
+    const inputNames = this._inputs.map(input => input.name);
 
     inputNames.forEach((inputName, index) => {
       const value = data[inputName];
 
       if (value) {
-        this.inputs[index].value = value;
+        this._inputs[index].value = value;
       }
     });
   }
@@ -94,16 +94,66 @@ class InputForm {
     const validationResult = this.validate();
 
     if (!validationResult.isValid) {
-      this.inputs.forEach(input => {
+      this._inputs.forEach(input => {
         input.classList.toggle('error', validationResult.errorFields.includes(input.name));
       });
 
       return;
     }
 
-    this.inputs.forEach(input => {
+    this._inputs.forEach(input => {
       input.classList.remove('error');
     });
+
+    const submitBtn = document.getElementById('submitButton');
+    const resultContainer = document.getElementById('resultContainer');
+    const loadData = () => {
+      const url = this._form.action;
+      const req = new XMLHttpRequest();
+
+      req.open('GET', url, true);
+      req.send();
+
+      req.onload = () => {
+        const res = JSON.parse(req.responseText);
+        const status = res.status;
+
+        resultContainer.classList.add(status); // Set class according to request result.
+
+        switch(status) {
+          case 'success': {
+            resultContainer.innerHTML = 'Success';
+
+            break;
+          }
+          case 'error': {
+            resultContainer.innerHTML = res.reason;
+
+            break;
+          }
+          case 'progress': {
+            setTimeout(loadData, res.timeout);
+
+            return; // Prevent submit button blinking.
+          }
+        }
+
+        submitBtn.disabled = false;
+      };
+
+      req.onerror = evt => {
+        resultContainer.className = '';
+        resultContainer.innerHTML = req.statusText;
+
+        submitBtn.disabled = false;
+      };
+    }
+
+    resultContainer.className = '';
+    resultContainer.innerHTML = '';
+    submitBtn.disabled = true;
+
+    loadData();
   }
 }
 

@@ -31,7 +31,11 @@ h1 {
     flex: 1 0 220px;
 }
 
-#myForm #submitButton {
+#myForm .form-input .error {
+    border: 1px solid red;
+}
+
+#submitButton {
     margin-left: auto;
     padding: 8px 16px;
     border: none;
@@ -40,6 +44,6 @@ h1 {
     letter-spacing: .1em;
 }
 
-.error {
-    border: 1px solid red;
+#submitButton:disabled {
+    background: #777;
 }
