@@ -31,6 +31,10 @@ h1 {
     flex: 1 0 220px;
 }
 
+#myForm .form-input input {
+    border: 1px solid #C2C2C2;
+}
+
 #myForm .form-input .error {
     border: 1px solid red;
 }

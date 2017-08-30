@@ -15,6 +15,7 @@ class InputForm {
    * @returns {{isValid: Boolean, errorFields: String[]}} Validation result data object.
    */
   validate() {
+    const phonePatt = new RegExp(/^\+7\(\d{3}\)\d{3}(?:-\d{2}){2}$/);
     let result = {
       isValid: true,
       errorFields: []
@@ -23,13 +24,13 @@ class InputForm {
     const validate0 = (name, value) => {
       switch(name) {
         case 'fio': {
-          return true;
+          return false;
         }
         case 'email': {
-          return true;
+          return false;
         }
         case 'phone': {
-          return true;
+          return phonePatt.test(value) && value.match( /\d/g).reduce((memo, num) => memo + parseInt(num), 0) < 30;
         }
       }
     }
