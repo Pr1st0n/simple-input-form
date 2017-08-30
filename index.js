@@ -23,18 +23,27 @@ class InputForm {
     const validate0 = (name, value) => {
       switch(name) {
         case 'fio': {
-          break;
+          return true;
         }
         case 'email': {
-          break;
+          return true;
         }
         case 'phone': {
-          break;
+          return true;
         }
       }
     }
 
-    this.inputs.forEach(input => validate0(input.name, input.value));
+    this.inputs.forEach(input => {
+      const name = input.name;
+      const value = input.value;
+      const isValid = validate0(name, value);
+
+      if (!isValid) {
+        result.isValid = false;
+        result.errorFields.push(name);
+      }
+    });
 
     return result;
   }
@@ -80,9 +89,21 @@ class InputForm {
    * @param {Object} evt Event.
    */
   submit(evt) {
-    evt.preventDefault();
+    evt.preventDefault(); // Prevent default form submit.
 
-    this.validate();
+    const validationResult = this.validate();
+
+    if (!validationResult.isValid) {
+      this.inputs.forEach(input => {
+        input.classList.toggle('error', validationResult.errorFields.includes(input.name));
+      });
+
+      return;
+    }
+
+    this.inputs.forEach(input => {
+      input.classList.remove('error');
+    });
   }
 }
 
