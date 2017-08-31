@@ -143,7 +143,6 @@ class InputForm {
           }
         }
 
-        resultContainer.classList.remove('loading');
         submitButton.disabled = false;
         clearTimeout(loaderTimeout);
         submitLoader.style.display = 'none';
