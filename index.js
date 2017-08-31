@@ -15,25 +15,29 @@ class InputForm {
    * @returns {{isValid: Boolean, errorFields: String[]}} Validation result data object.
    */
   validate() {
-    const phonePatt = new RegExp(/^\+7\(\d{3}\)\d{3}(?:-\d{2}){2}$/);
+    const fioPatt = new RegExp(/^([a-zа-я]+\s){2}([a-zа-я]+)$/i);
+    const emailPatt = new RegExp(
+      /^[a-z]{1}[a-z0-9\.-]{1,28}[a-z0-9]{1}@(ya\.ru|yandex\.ru|yandex\.ua|yandex\.by|yandex\.kz|yandex\.com)$/i
+    );
+    const phonePatt = new RegExp(/^\+7\(\d{3}\)\d{3}(?:-\d{2}){2}$/i);
     let result = {
       isValid: true,
       errorFields: []
-    }
+    };
 
     const validate0 = (name, value) => {
-      switch(name) {
+      switch (name) {
         case 'fio': {
-          return false;
+          return fioPatt.test(value);
         }
         case 'email': {
-          return false;
+          return emailPatt.test(value);
         }
         case 'phone': {
           return phonePatt.test(value) && value.match( /\d/g).reduce((memo, num) => memo + parseInt(num), 0) < 30;
         }
       }
-    }
+    };
 
     this._inputs.forEach(input => {
       const name = input.name;
@@ -63,14 +67,13 @@ class InputForm {
   }
 
   /**
-   * Sets data object fields as input values.
+   * Sets allowed data object fields as input values.
    *
    * @param {Object} data Data object:
    * - {String} fio Three words string.
-   * - {String} email String for email with one of the domains: ya.ru, yandex.ru,
-   * yandex.ua, yandex.by, yandex.kz, yandex.com.
-   * - {String} phone Phone number in format: +7(111)222-33-11 with digits sum
-   * not exceeding 30.
+   * - {String} email String for email with one of the domains: ya.ru, yandex.ru, yandex.ua,
+   * yandex.by, yandex.kz, yandex.com.
+   * - {String} phone Phone number in format: +7(111)222-33-11 with digits sum not exceeding 30.
    */
   setData(data) {
     const inputNames = this._inputs.map(input => input.name);
@@ -106,7 +109,8 @@ class InputForm {
       input.classList.remove('error');
     });
 
-    const submitBtn = document.getElementById('submitButton');
+    const submitButton = document.getElementById('submitButton');
+    const submitLoader = document.getElementById('submitLoader');
     const resultContainer = document.getElementById('resultContainer');
     const loadData = () => {
       const url = this._form.action;
@@ -121,7 +125,7 @@ class InputForm {
 
         resultContainer.classList.add(status); // Set class according to request result.
 
-        switch(status) {
+        switch (status) {
           case 'success': {
             resultContainer.innerHTML = 'Success';
 
@@ -139,23 +143,33 @@ class InputForm {
           }
         }
 
-        submitBtn.disabled = false;
+        resultContainer.classList.remove('loading');
+        submitButton.disabled = false;
+        clearTimeout(loaderTimeout);
+        submitLoader.style.display = 'none';
       };
 
       req.onerror = evt => {
         resultContainer.className = '';
         resultContainer.innerHTML = req.statusText;
+        submitButton.disabled = false;
 
-        submitBtn.disabled = false;
+        clearTimeout(loaderTimeout);
+
+        submitLoader.style.display = 'none';
       };
-    }
+    };
 
-    resultContainer.className = '';
     resultContainer.innerHTML = '';
-    submitBtn.disabled = true;
+    submitButton.disabled = true;
+
+    // Prevent loader blinking.
+    const loaderTimeout = setTimeout(() => {
+      submitLoader.style.display = 'block';
+    }, 100);
 
     loadData();
   }
 }
 
-const MyForm = new InputForm();
+const MyForm = new InputForm(); // eslint-disable-line no-unused-vars

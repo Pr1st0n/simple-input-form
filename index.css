@@ -18,6 +18,26 @@ h1 {
     align-items: center;
 }
 
+#myForm .form-submit {
+    height: 50px;
+}
+
+#submitLoader {
+    border: 12px solid #f3f3f3;
+    border-top: 12px solid #C2C2C2;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+    margin-right: -90px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 #myForm .form-input {
     padding-bottom: 10px;
 }
@@ -50,4 +70,10 @@ h1 {
 
 #submitButton:disabled {
     background: #777;
+}
+
+#resultContainer {
+    text-align: center;
+    min-height: 18px;
+    padding: 8px 0;
 }
